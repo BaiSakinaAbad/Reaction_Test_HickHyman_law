@@ -1,11 +1,59 @@
 body {
-    background: linear-gradient(to bottom right, #8a5bc2, #4a2f7a); 
+    background: linear-gradient(to bottom right, #dbf6ff, #75aabc); 
     min-height: 100vh; 
   }
-  
   .content-box {
-    background-color: rgb(88, 34, 139); 
-    color: white ; 
+    background-color: #bbe9f0; 
+    color: #495255 ; 
     max-width: 1000px;
     margin: auto;
+  }
+  .button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .sim-button {
+    width: 60px;
+    height: 60px;
+    background-color: #4a90e2;
+    border: none;
+    border-radius: 5px;
+    color: #495255;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .sim-button:hover {
+    background-color: #357abd;
+  }
+  .sim-button.active {
+    background-color: #e94e77;
+  }
+  #result, #resultsTable {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #495255;
+  }
+  #chartContainer {
+    margin-top: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  table {
+    width: 50%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    color: #031218;
+  }
+  th, td {
+    border: 1px solid #92a4aa;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #92a4aa;
   }

@@ -7,28 +7,39 @@
   <link rel="stylesheet" href="../css/simulation.css">
   <!-- Bootstrap CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Navbar here -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-  <a class="navbar-brand fw-bold text-white" href="home.html">Hick Hyman Law</a>
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav ms-auto">
-      <li class="nav-item"><a class="nav-link" href="home.html">HOME</a></li>
-      <li class="nav-item"><a class="nav-link" href="procedure.html">PROCEDURE</a></li>
-      <li class="nav-item"><a class="nav-link" href="theory.html">THEORY</a></li>
-      <li class="nav-item"><a class="nav-link" href="simulation.html">SIMULATION</a></li>
-      <li class="nav-item"><a class="nav-link" href="reference.html">REFERENCE</a></li>
-    </ul>
-  </div>
-</nav>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold text-white" href="home.html">Hick Hyman Law</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="home.html">HOME</a></li>
+        <li class="nav-item"><a class="nav-link" href="procedure.html">PROCEDURE</a></li>
+        <li class="nav-item"><a class="nav-link" href="theory.html">THEORY</a></li>
+        <li class="nav-item"><a class="nav-link" href="simulation.html">SIMULATION</a></li>
+        <li class="nav-item"><a class="nav-link" href="reference.html">REFERENCE</a></li>
+      </ul>
+    </div>
+  </nav>
 
-  
   <div class="container text-center mt-5">
     <div class="content-box p-5 rounded">
-      <h1 class="mb-3">SIMULATION PAGE</h1>
-      <p>This section is the welcome page lol.</p>
+      <h1 class="mb-3">Hick-Hyman's Law Simulation</h1>
+      <p>Click the highlighted button as quickly as possible. Complete 10 rounds for each set of buttons (from 4 to 10). Results will be shown in a table and chart after all sets are complete.</p>
+      <div id="status" class="mb-3"></div>
+      <div id="buttonContainer" class="button-container"></div>
+      <button id="startButton" class="btn btn-primary mt-3" onclick="startSimulation()">Start Simulation</button>
+      <div id="result"></div>
+      <div id="resultsTable"></div>
+      <div id="chartContainer">
+        <canvas id="reactionTimeChart"></canvas>
+      </div>
     </div>
   </div>
+
+  <script src="../js/simulation.js"></script>
 </body>
 </html>

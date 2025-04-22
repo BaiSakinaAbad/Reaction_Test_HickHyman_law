@@ -1,11 +1,10 @@
 body {
-    background: linear-gradient(to bottom right, #8a5bc2, #4a2f7a); 
-    min-height: 100vh; 
-  }
-  
-  .content-box {
-    background-color: rgb(88, 34, 139); 
-    color: white; 
-    max-width: 1000px;
-    margin: auto;
-  }
+  background: linear-gradient(to bottom right, #dbf6ff, #75aabc); 
+  min-height: 100vh; 
+}
+.content-box {
+  background-color: #bbe9f0; 
+  color: #495255 ; 
+  max-width: 1000px;
+  margin: auto;
+}
