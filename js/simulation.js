@@ -1,12 +1,12 @@
 // Parameters for Hick-Hyman Law and simulation
-let a = 150; // Initial default base reaction time (will be updated after calibration)
+let a = 150; // Initial default base (will be updated after calibration)
 const b = 150; // Hick-Hyman's Law constant in ms/bit
 const roundsPerSet = 5; // 5 rounds per number of buttons
 const minButtons = 4; // Start with 4 buttons
 const maxButtons = 10; // End with 10 buttons
 const calibrationRounds = 3; // Number of rounds for calibration (n = 1)
 let currentButtons = minButtons; // Current number of buttons
-let round = 0; // Current round in the set
+let round = 0;
 let reactionTimes = []; // Store reaction times for the rounds
 let calibrationTimes = []; // Store reaction times for calibration
 let startTime, targetButton;
