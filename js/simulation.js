@@ -1,17 +1,13 @@
-// Parameters for Hick-Hyman Law and simulation
-let a = 150; // Initial default base (will be updated after calibration)
-const b = 150; // Hick-Hyman's Law constant in ms/bit
-const roundsPerSet = 5; // 5 rounds per number of buttons
+const roundsPerSet = 5; // 10 rounds per number of buttons
 const minButtons = 4; // Start with 4 buttons
-const maxButtons = 10; // End with 10 buttons
-const calibrationRounds = 3; // Number of rounds for calibration (n = 1)
+const maxButtons = 10; // End with 14 buttons
+const a = 150; // Base reaction time in ms
+const b = 150; // Hick-Hyman's Law constant in ms/bit
 let currentButtons = minButtons; // Current number of buttons
-let round = 0;
-let reactionTimes = []; // Store reaction times for the rounds
-let calibrationTimes = []; // Store reaction times for calibration
+let round = 0; // Current round in the set
+let reactionTimes = []; // Store reaction times for the 10 rounds
 let startTime, targetButton;
 let results = []; // Store final RTs for each number of buttons
-let isCalibrating = false; // Track calibration phase
 
 function initializeButtons(numButtons) {
   const container = document.getElementById('buttonContainer');
@@ -37,18 +33,15 @@ function shuffle(array) {
 }
 
 function startSimulation() {
-  // Start with calibration phase
-  isCalibrating = true;
-  calibrationTimes = [];
+  currentButtons = minButtons; 
   round = 0;
-  currentButtons = 1;
+  reactionTimes = [];
   results = [];
   document.getElementById('result').innerText = '';
   document.getElementById('resultsTable').innerHTML = '';
   const chartCanvas = document.getElementById('reactionTimeChart');
   if (chartCanvas.chart) chartCanvas.chart.destroy(); // Clear previous chart
   document.getElementById('startButton').innerText = 'Restart Simulation';
-  document.getElementById('status').innerText = `Calibration: Round ${round + 1} of ${calibrationRounds} (1 button)`;
   startRound();
 }
 
@@ -60,14 +53,8 @@ function startRound() {
   allButtons.forEach(btn => btn.classList.remove('active'));
   targetButton.classList.add('active');
   startTime = performance.now();
-
-  if (isCalibrating) {
-    document.getElementById('status').innerText = 
-      `Calibration: Round ${round} of ${calibrationRounds} (1 button)`;
-  } else {
-    document.getElementById('status').innerText = 
-      `Buttons: ${currentButtons} | Round: ${round} of ${roundsPerSet}`;
-  }
+  document.getElementById('status').innerText = 
+    `Buttons: ${currentButtons} | Round: ${round} of ${roundsPerSet}`;
 }
 
 function generateGaussianNoise(mean = 0, stdev = 30) {
@@ -81,63 +68,41 @@ function checkReaction(button) {
   if (button !== targetButton) return;
   const endTime = performance.now();
   const measuredRT = endTime - startTime;
+  reactionTimes.push(measuredRT);
 
-  if (isCalibrating) {
-    calibrationTimes.push(measuredRT);
+  if (round < roundsPerSet) {
+    startRound(); // Start the next round
+  } else {
+    // Calculate and store results after 5 rounds
+    const avgMeasuredRT = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length;
 
-    if (round < calibrationRounds) {
-      startRound(); // Continue calibration
-    } else {
-      // End calibration, calculate a
-      a = calibrationTimes.reduce((sum, rt) => sum + rt, 0) / calibrationTimes.length;
-      document.getElementById('result').innerHTML = 
-        `<strong>Calibration Complete:</strong><br>` +
-        `Estimated Base Reaction Time (a): ${a.toFixed(2)} ms<br><br>`;
+    // Hick-Hyman's Law: RT = a + b * log2(n)
+    const n = currentButtons;
+    const hickRT = a + b * Math.log2(n);
 
-      // Start main simulation
-      isCalibrating = false;
-      currentButtons = minButtons;
+    // Add Gaussian noise to the predicted RT
+    const noise = generateGaussianNoise(0, 30);
+    const finalRT = Math.max(0, hickRT + noise); // Ensure RT is non-negative
+
+    results.push({ buttons: currentButtons, rt: finalRT });
+
+    document.getElementById('result').innerHTML += 
+      `<strong>Results for ${currentButtons} buttons:</strong><br>` +
+      `Average Measured Reaction Time: ${avgMeasuredRT.toFixed(2)} ms<br>` +
+      `Hick-Hyman's Law Predicted RT: ${hickRT.toFixed(2)} ms<br>` +
+      `Final RT (with noise): ${finalRT.toFixed(2)} ms<br><br>`;
+
+    // Move to the next number of buttons or end the simulation
+    if (currentButtons < maxButtons) {
+      currentButtons++;
       round = 0;
       reactionTimes = [];
       startRound();
-    }
-  } else {
-    reactionTimes.push(measuredRT);
-
-    if (round < roundsPerSet) {
-      startRound(); // Start the next round
     } else {
-      // Calculate and store results after 5 rounds
-      const avgMeasuredRT = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length;
-
-      // Hick-Hyman's Law: RT = a + b * log2(n), using estimated a
-      const n = currentButtons;
-      const hickRT = a + b * Math.log2(n);
-
-      // Add Gaussian noise to the predicted RT
-      const noise = generateGaussianNoise(0, 30);
-      const finalRT = Math.max(0, hickRT + noise); // Ensure RT is non-negative
-
-      results.push({ buttons: currentButtons, rt: finalRT });
-
-      document.getElementById('result').innerHTML += 
-        `<strong>Results for ${currentButtons} buttons:</strong><br>` +
-        `Average Measured Reaction Time: ${avgMeasuredRT.toFixed(2)} ms<br>` +
-        `Hick-Hyman's Law Predicted RT: ${hickRT.toFixed(2)} ms<br>` +
-        `Final RT (with noise): ${finalRT.toFixed(2)} ms<br><br>`;
-
-      // Move to the next number of buttons or end the simulation
-      if (currentButtons < maxButtons) {
-        currentButtons++;
-        round = 0;
-        reactionTimes = [];
-        startRound();
-      } else {
-        document.getElementById('status').innerText = 'Simulation Complete!';
-        document.getElementById('startButton').innerText = 'Start Simulation';
-        displayResultsTable();
-        drawChart();
-      }
+      document.getElementById('status').innerText = 'Simulation Complete!';
+      document.getElementById('startButton').innerText = 'Start Simulation';
+      displayResultsTable();
+      drawChart();
     }
   }
 }
