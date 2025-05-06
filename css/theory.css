@@ -7,6 +7,13 @@ body {
   color: #495255 ; 
   max-width: 1000px;
   margin: auto;
+  border: 2px solid #75aabc;
+  border-radius: 10px;
+  padding: 40px;
+  margin: 50px auto;
+  max-width: 1000px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
   
   .formula-img {
